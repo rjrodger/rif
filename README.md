@@ -6,11 +6,13 @@ output of `require('os').networkInterfaces()`.
 
 ## Example
 
+Note: use `ifconfig` or `ipconfig` to list actual interface names.
+
 ```js
 var Rif = require('rif')
 
-console.log(Rif('lo')) // prints IPv4 address: 127.0.0.1
-console.log(Rif('lo/6')) // prints IPv6 address: ::1
+console.log(Rif('lo')) // prints IPv4 address of loopback interface: 127.0.0.1
+console.log(Rif('lo/6')) // prints IPv6 address of loopback interface: ::1
 console.log(Rif('eth0')) // prints IPv4 address of interface eth0: 10.x.x.x (depends on your system!)
 
 console.log(Rif('lo/4/netmask=255.0.0.0')) // netmask field must equal 255.0.0.0
@@ -22,8 +24,8 @@ console.log(Rif('lo/4/netmask^255,internal=true')) // netmask field must start w
 `ifname/v/fieldspec`
 
   * `ifname`: name of network interface.
-  * `v`: IP version: 4 or 6, meaning IPv4 or IPv6 respectively.
-  * `fieldspec`: comma-separated list of field value tests
+  * `v`: (optional) IP version: 4 or 6, meaning IPv4 or IPv6 respectively.
+  * `fieldspec`: (optional) comma-separated list of field value tests
   
 The field value tests are of the form: `name#value` where # is one of:
 
@@ -32,7 +34,7 @@ The field value tests are of the form: `name#value` where # is one of:
   * `$`: field ends with value.
   * `%`: field contains value.
 
-See [unit tests](../blob/master/test/rif.test.js) for more examples.
+See [unit tests](../master/test/rif.test.js) for more examples.
 
 
 ## License
