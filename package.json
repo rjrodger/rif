@@ -1,0 +1,37 @@
+{
+  "name": "rif",
+  "version": "0.1.0",
+  "description": "Node.js module to resolve network interfaces.",
+  "main": "rif.js",
+  "scripts": {
+    "test": "lab -P test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rjrodger/rif.git"
+  },
+  "keywords": [
+    "resolve",
+    "network",
+    "interface",
+    "lo",
+    "eth0",
+    "eth1",
+    "en0",
+    "en1"
+  ],
+  "author": "Richard Rodger (http://richardrodger.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rjrodger/rif/issues"
+  },
+  "homepage": "https://github.com/rjrodger/rif",
+  "dependencies": {
+    "lab": "^10.9.0"
+  },
+  "files": [
+    "rif.js",
+    "LICENSE",
+    "README.md"
+  ]
+}
