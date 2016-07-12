@@ -1,6 +1,6 @@
 {
   "name": "rif",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Node.js module to resolve network interfaces.",
   "main": "rif.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "url": "https://github.com/rjrodger/rif/issues"
   },
   "homepage": "https://github.com/rjrodger/rif",
-  "dependencies": {
+  "devDendencies": {
     "lab": "^10.9.0"
   },
   "files": [
