@@ -5,35 +5,15 @@ var Assert = require('assert')
 
 var Lab = require('lab')
 
-var rif = require('..').rif
+var Rif = require('..')
+
 
 var lab = exports.lab = Lab.script()
 var describe = lab.describe
 var it = lab.it
 
-describe('rif', function() {
-
-  it('happy', function (done) {
-    Assert.equal('127.0.0.1', rif('lo',netif))
-    Assert.equal('127.0.0.1', rif('lo/4',netif))
-    Assert.equal('127.0.0.1', rif('lo/x',netif))
-    Assert.equal('::1', rif('lo/6',netif))
-
-    Assert.equal('10.0.2.15', rif('eth0/4/internal=false',netif))
-    Assert.equal(void 0, rif('eth0/4/internal=true',netif))
-    Assert.equal('10.0.2.15', rif('eth0/4/mac=08:00:27:1b:bc:e9',netif))
-    Assert.equal('10.0.2.15', rif('eth0/4/mac^08:00',netif))
-    Assert.equal('10.0.2.15', rif('eth0/4/mac$bc:e9',netif))
-    Assert.equal('10.0.2.15', rif('eth0/4/mac%27:1b',netif))
-    Assert.equal('fe80::a00:27ff:fe1b:bce9', rif('eth0/6/mac%27:1b,internal=false',netif))
-
-    Assert.equal('192.168.59.10', rif('eth1',netif))
-    done()
-  })
-})
-
-
-var netif = { lo:
+var netif = { 
+  lo:
    [ { address: '127.0.0.1',
        netmask: '255.0.0.0',
        family: 'IPv4',
@@ -68,6 +48,45 @@ var netif = { lo:
        family: 'IPv6',
        mac: '08:00:27:9b:b2:8d',
        scopeid: 3,
-       internal: false } ] }
+       internal: false } ] 
+}
+
+
+describe('rif', function() {
+
+  var rif = Rif(netif)
+
+  it('happy', function (done) {
+    Assert.equal('127.0.0.1', rif('lo'))
+    Assert.equal('127.0.0.1', rif('lo/4'))
+    Assert.equal('127.0.0.1', rif('lo/x'))
+    Assert.equal('::1', rif('lo/6'))
+
+    Assert.equal('10.0.2.15', rif('eth0/4/internal=false'))
+    Assert.equal(void 0, rif('eth0/4/internal=true'))
+    Assert.equal('10.0.2.15', rif('eth0/4/mac=08:00:27:1b:bc:e9'))
+    Assert.equal('10.0.2.15', rif('eth0/4/mac^08:00'))
+    Assert.equal('10.0.2.15', rif('eth0/4/mac$bc:e9'))
+    Assert.equal('10.0.2.15', rif('eth0/4/mac%27:1b'))
+    Assert.equal('fe80::a00:27ff:fe1b:bce9', rif('eth0/6/mac%27:1b,internal=false'))
+
+    Assert.equal('192.168.59.10', rif('eth1'))
+    done()
+  })
+
+  it('readme', function (done) {
+    var rif = Rif({
+      my_interface: [{
+        address: '192.168.1.2'
+      }]
+    })
+    
+    Assert.equal('192.168.1.2', rif('my_interface'))
+
+    done()
+  })
+})
+
+
 
 

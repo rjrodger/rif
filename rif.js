@@ -3,24 +3,31 @@
 
 var Os = require('os')
 
-module.exports = function (spec) {
-  return rif(spec, Os.networkInterfaces())
+module.exports = function (entries) {
+  return function rif (spec) {
+    return resolve(spec, merge(Os.networkInterfaces(),entries))
+  }
 }
 
-module.exports.rif = rif
+module.exports.resolve = resolve
 
-function rif (spec, netif) {
+function resolve (spec, netif) {
   var netif  = netif
   var parts  = spec.split('/')
   var ifname = parts[0]
   var ipv    = 6 == parts[1] ? 6 : 4
   var fields = parts[2]
 
-  var entries = netif[ifname] ||  []
+  var all_entries = netif[ifname] ||  []
 
-  entries = entries.filter(function (entry) {
+  var entries = all_entries.filter(function (entry) {
     return 6 === ipv ? 'IPv6' === entry.family : 'IPv4' === entry.family
   })
+
+  // If no IP family in entries, ignore IP family
+  if( 0 === entries.length ) {
+    entries = all_entries
+  }
 
   if( null != fields ) {
     var fexprs = fields.split(',').map(function (fexpr) {
@@ -64,3 +71,20 @@ function rif (spec, netif) {
   return entry ? (entry.address || void 0) : void 0
 }
 
+
+// b wins
+function merge (a,b) {
+  if( !b ) return a
+
+  var o = {}
+  
+  for( var p in a ) {
+    o[p] = a[p]
+  }
+
+  for( var p in b ) {
+    o[p] = b[p]
+  }
+
+  return o
+}
