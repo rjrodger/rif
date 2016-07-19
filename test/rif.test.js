@@ -54,23 +54,36 @@ var netif = {
 
 describe('rif', function() {
 
-  var rif = Rif(netif)
+  var rslv = function (spec) {
+    return Rif.resolve(spec, netif)
+  }
 
   it('happy', function (done) {
-    Assert.equal('127.0.0.1', rif('lo'))
-    Assert.equal('127.0.0.1', rif('lo/4'))
-    Assert.equal('127.0.0.1', rif('lo/x'))
-    Assert.equal('::1', rif('lo/6'))
+    Assert.equal('127.0.0.1', rslv('lo'))
+    Assert.equal('127.0.0.1', rslv('lo/4'))
+    Assert.equal('127.0.0.1', rslv('lo/x'))
+    Assert.equal('::1', rslv('lo/6'))
 
-    Assert.equal('10.0.2.15', rif('eth0/4/internal=false'))
-    Assert.equal(void 0, rif('eth0/4/internal=true'))
-    Assert.equal('10.0.2.15', rif('eth0/4/mac=08:00:27:1b:bc:e9'))
-    Assert.equal('10.0.2.15', rif('eth0/4/mac^08:00'))
-    Assert.equal('10.0.2.15', rif('eth0/4/mac$bc:e9'))
-    Assert.equal('10.0.2.15', rif('eth0/4/mac%27:1b'))
-    Assert.equal('fe80::a00:27ff:fe1b:bce9', rif('eth0/6/mac%27:1b,internal=false'))
+    Assert.equal('10.0.2.15', rslv('eth0/4/internal=false'))
+    Assert.equal(void 0, rslv('eth0/4/internal=true'))
+    Assert.equal('10.0.2.15', rslv('eth0/4/mac=08:00:27:1b:bc:e9'))
+    Assert.equal('10.0.2.15', rslv('eth0/4/mac^08:00'))
+    Assert.equal('10.0.2.15', rslv('eth0/4/mac$bc:e9'))
+    Assert.equal('10.0.2.15', rslv('eth0/4/mac%27:1b'))
+    Assert.equal('fe80::a00:27ff:fe1b:bce9', rslv('eth0/6/mac%27:1b,internal=false'))
 
-    Assert.equal('192.168.59.10', rif('eth1'))
+    Assert.equal('192.168.59.10', rslv('eth1'))
+
+    Assert.equal('8.8.8.8', rslv('8.8.8.8'))
+
+    Assert.equal('192.168.59.10', rslv('*/4/address^192.168'))
+    Assert.equal('192.168.59.10', rslv('*/*/address^192.168'))
+    Assert.equal('192.168.59.10', rslv('*//address^192.168'))
+
+    Assert.equal('192.168.59.10', rslv('/4/address^192.168'))
+    Assert.equal('192.168.59.10', rslv('/*/address^192.168'))
+    Assert.equal('192.168.59.10', rslv('//address^192.168'))
+
     done()
   })
 

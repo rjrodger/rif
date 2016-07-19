@@ -3,6 +3,9 @@
 
 var Os = require('os')
 
+var Ip = require('ip')
+
+
 module.exports = function (entries) {
   return function rif (spec) {
     return resolve(spec, merge(Os.networkInterfaces(),entries))
@@ -15,13 +18,18 @@ function resolve (spec, netif) {
   var netif  = netif
   var parts  = spec.split('/')
   var ifname = parts[0]
-  var ipv    = 6 == parts[1] ? 6 : 4
+  var ipv    = 6 == parts[1] ? 6 : 4 == parts[1] ? 4 : 0
   var fields = parts[2]
 
   var all_entries = netif[ifname] ||  []
+  if( 0 === all_entries.length && ('*' === ifname || '' === ifname) ) {
+    for( var p in netif ) {
+      all_entries = all_entries.concat(netif[p])
+    }
+  }
 
   var entries = all_entries.filter(function (entry) {
-    return 6 === ipv ? 'IPv6' === entry.family : 'IPv4' === entry.family
+    return 6 === ipv ? 'IPv6' === entry.family : 4 === ipv ? 'IPv4' === entry.family : true
   })
 
   // If no IP family in entries, ignore IP family
@@ -68,7 +76,14 @@ function resolve (spec, netif) {
   }
 
   var entry = entries[0]
-  return entry ? (entry.address || void 0) : void 0
+  var result = entry ? (entry.address || null) : null
+
+  // If unrecognized, maybe it's a vanilla address
+  if( Ip.isV4Format(spec) || Ip.isV6Format(spec) ) {
+    result = spec
+  }
+
+  return result
 }
 
 
