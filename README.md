@@ -24,7 +24,8 @@ console.log(rif('eth0')) // prints IPv4 address of interface eth0: 10.x.x.x (dep
 console.log(rif('lo/4/netmask=255.0.0.0')) // netmask field must equal 255.0.0.0
 console.log(rif('lo/4/netmask^255,internal=true')) // netmask field must start with 255 and internal field must have value true
 
-console.log(rif('//address^192.168')) // prints first found IPv4 address of any interface, where address starts with 192.168
+console.log(rif('//address^192.168')) // prints first found address of any interface of any family,
+                                      // where address starts with 192.168
 ```
 
 You can optionally provide a fixed set of pre-defined interfaces. This useful for testing (see (seneca-mesh/test/mesh.test.js)[github.com/rjrodger/seneca-mesh/blob/master/test/mesh.test.js]).
